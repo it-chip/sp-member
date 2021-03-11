@@ -5,7 +5,7 @@ spring:
 # local 환경
 ---
 server:
-  port: 5080
+  port: 8080
 
 spring:
   datasource:
