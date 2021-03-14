@@ -25,7 +25,7 @@ internal class FooRouterTest(private val context: ApplicationContext) {
     fun setup(restDocumentation: RestDocumentationContextProvider) {
         webTestClient = WebTestClient.bindToApplicationContext(context)
             .configureClient()
-            .baseUrl("http://localhost:5080")
+            .baseUrl("http://localhost:8080")
             .filter(WebTestClientRestDocumentation.documentationConfiguration(restDocumentation))
             .build()
     }
@@ -34,7 +34,7 @@ internal class FooRouterTest(private val context: ApplicationContext) {
     fun `FooRouter search`() {
 
         webTestClient.get()
-            .uri("/backend/search")
+            .uri("/backend/members")
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
