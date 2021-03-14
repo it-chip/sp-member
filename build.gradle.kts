@@ -59,6 +59,7 @@ dependencies {
     // Spring Cloud
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 
     // JSON
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")            //jackson 에서 kotlin 지원을 위한 모듈

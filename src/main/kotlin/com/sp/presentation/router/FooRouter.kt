@@ -14,7 +14,7 @@ class FooRouter(private val fooHandler: FooHandler) {
     @Bean
     fun routerScatter(): RouterFunction<ServerResponse> {
         return coRouter {
-            (accept(MediaType.APPLICATION_JSON) and "/backend/search").nest {
+            (accept(MediaType.APPLICATION_JSON) and "/backend/members").nest {
                 GET("", fooHandler::search)
             }
         }

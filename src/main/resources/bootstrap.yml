@@ -8,9 +8,11 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: member-front
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false
+    url: jdbc:mysql://15.165.213.153:3306/member?serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password: a90a1027a
   jpa:
@@ -26,3 +28,10 @@ spring:
         format-sql: true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+     defaultZone: http://3.34.76.99:8761/eureka
