@@ -1,99 +1,177 @@
 import org.jetbrains.kotlin.gradle.tasks.*
 
 val snippetsDir: String by extra("build/generated-snippets")
+val springCloudVersion: String by extra { "Hoxton.SR8" }
+val querydslVersion: String by extra { "4.3.1" }
 val coroutineVersion: String by extra { "1.3.9" }
 val springRestdocsVersion: String by extra { "2.0.4.RELEASE" }
-val springCloudVersion: String by extra { "Hoxton.SR8" }
+
+buildscript {
+    repositories {
+        repositories { mavenCentral() }
+    }
+}
 
 plugins {
     val kotlinVersion = "1.4.30"
     val springBootVersion = "2.3.3.RELEASE"
     val springDependencyManagementVersion = "1.0.11.RELEASE"
 
-    id("org.springframework.boot") version springBootVersion
-    id("io.spring.dependency-management") version springDependencyManagementVersion
+    // PLUGIN: Language
+    java
 
+    // PLUGIN: Kotlin
     kotlin("jvm") version kotlinVersion
     kotlin("kapt") version kotlinVersion
-    kotlin("plugin.spring") version kotlinVersion
-    kotlin("plugin.jpa") version kotlinVersion
-    kotlin("plugin.allopen") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion apply false
+    kotlin("plugin.jpa") version kotlinVersion apply false
+    kotlin("plugin.allopen") version kotlinVersion apply false
+
+    // PLUGIN: Spring Boot
+    id("org.springframework.boot") version springBootVersion apply false
+    id("io.spring.dependency-management") version springDependencyManagementVersion
 }
 
-group = "com.sp"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+allprojects {
+    repositories { mavenCentral() }
+}
 
-repositories {
-    mavenCentral()
+subprojects {
+    group = "com.sp"
+    version = "1.0"
+
+    apply(plugin = "kotlin")
+    apply(plugin = "org.jetbrains.kotlin.kapt")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+
+
+    tasks {
+        val action: KotlinCompile.() -> Unit = {
+            kotlinOptions {
+                freeCompilerArgs = listOf("-Xjsr305=strict", "-Xuse-experimental=kotlin.Experimental")
+                jvmTarget = JavaVersion.VERSION_11.toString()
+            }
+        }
+
+        compileKotlin(action)
+        compileTestKotlin(action)
+
+        configure<JavaPluginConvention> {
+            sourceCompatibility = JavaVersion.VERSION_11
+        }
+    }
+
+
+    dependencies {
+        implementation(kotlin("stdlib-jdk8"))
+        implementation(kotlin("reflect"))
+
+        // Kotlin
+        implementation(kotlin("gradle-plugin"))
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+        // Spring Cloud
+        implementation("org.springframework.cloud:spring-cloud-starter-config")
+        implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+        implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+        apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+        apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
+        apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
+
+        apply(plugin = "org.springframework.boot")
+        apply(plugin = "io.spring.dependency-management")
+
+        // Query DSL
+        implementation("com.querydsl:querydsl-jpa:${querydslVersion}")
+        implementation("com.querydsl:querydsl-sql:${querydslVersion}") {
+            exclude("joda-time")
+        }
+        kapt("com.querydsl:querydsl-apt:${querydslVersion}:jpa")
+
+        dependencyManagement {
+            imports {
+                mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+            }
+        }
+
+    }
+
+    if (project.name != "core") {
+
+        dependencies {
+
+            kapt("org.springframework.boot:spring-boot-configuration-processor")
+            // Spring Boot
+            implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+            // Spring Cloud
+            implementation("org.springframework.cloud:spring-cloud-starter-config")
+            implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+            // Circuit Breaker
+            implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix")
+
+            implementation("org.springframework.security:spring-security-core:3.0.3.RELEASE")
+            implementation("org.jasypt:jasypt-springsecurity3:1.9.2")
+
+            implementation("org.modelmapper:modelmapper:2.3.2")
+            implementation("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
+
+            runtimeOnly("mysql:mysql-connector-java")
+
+            // JSON
+            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+            implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+            implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
+
+
+            testImplementation("org.springframework.boot:spring-boot-starter-test")
+            testImplementation("io.projectreactor:reactor-test")
+            implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+            // coroutine
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutineVersion}")
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${coroutineVersion}")
+
+            testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutineVersion}")
+
+            // Mock server
+            testImplementation("org.mock-server:mockserver-netty:5.7.2")
+
+            testImplementation("org.junit.platform:junit-platform-launcher")
+            testImplementation("org.junit.jupiter:junit-jupiter-api")
+            testImplementation("org.junit.jupiter:junit-jupiter-engine")
+
+            // documentation
+            testImplementation("org.springframework.restdocs:spring-restdocs-webtestclient:${springRestdocsVersion}")
+//            testImplementation("com.epages:restdocs-api-spec:0.8.2")
+
+            // MockK
+            testImplementation("io.mockk:mockk:1.10.0")
+
+            // Spring mockK
+            testImplementation("com.ninja-squad:springmockk:2.0.3")
+        }
+
+        tasks {
+            test {
+                useJUnitPlatform {
+                    excludeEngines = setOf("junit-vintage")
+                }
+                testLogging {
+                    showStandardStreams = false
+                }
+                outputs.dir(snippetsDir)
+                jvmArgs = listOf("--illegal-access=permit")
+            }
+        }
+
+    }
 }
 
 dependencies {
-    // Kotlin
-    implementation(kotlin("gradle-plugin"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-
-    // Spring Boot
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
-
-    // coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutineVersion}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${coroutineVersion}")
-
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutineVersion}")
-
-    implementation(kotlin("reflect"))
-    implementation(kotlin("stdlib-jdk8"))
-
-    runtimeOnly("mysql:mysql-connector-java")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("io.projectreactor:reactor-test")
-    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")        //kotlin extension 기능 적용 모
-
-    // documentation
-    testImplementation("org.springframework.restdocs:spring-restdocs-webtestclient:${springRestdocsVersion}")
-//    testImplementation("com.epages:restdocs-api-spec:0.8.2")
-
-    // Spring Cloud
-    implementation("org.springframework.cloud:spring-cloud-starter-config")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
-
-    // JSON
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")            //jackson 에서 kotlin 지원을 위한 모듈
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")        //자바 8의 시간 타입을 지원하는 모듈
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")    //지연로딩과 조회 성능 최적화
-
-    testImplementation("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine")
-
-    // MockK
-    testImplementation("io.mockk:mockk:1.10.0")
-
-    // Spring mockK
-    testImplementation("com.ninja-squad:springmockk:2.0.3")
-
-    dependencyManagement {
-        imports {
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
-        }
-    }
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
-    }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
-
-tasks.test {
-    outputs.dir(snippetsDir)
+    implementation("mysql:mysql-connector-java:8.0.17")
 }

@@ -10,6 +10,6 @@ import org.springframework.web.reactive.function.server.*
 class FooHandler {
     suspend fun search(request: ServerRequest): ServerResponse {
 
-        return ServerResponse.ok().bodyValueAndAwait("Hi~ sp-member~")
+        return ServerResponse.ok().bodyValueAndAwait("Hi~ sp-member-front~")
     }
 }

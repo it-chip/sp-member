@@ -5,11 +5,11 @@ spring:
 # local 환경
 ---
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
-    name: member-front
+    name: member-internal
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://15.165.213.153:3306/member?serverTimezone=Asia/Seoul&useSSL=false
@@ -34,4 +34,4 @@ eureka:
     prefer-ip-address: true
   client:
     service-url:
-     defaultZone: http://3.34.76.99:8761/eureka
+      defaultZone: http://3.34.76.99:8761/eureka

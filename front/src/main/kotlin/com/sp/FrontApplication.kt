@@ -10,8 +10,8 @@ import org.springframework.web.reactive.config.*
 @EnableEurekaClient
 @ConfigurationPropertiesScan
 @EnableWebFlux
-class SpApplication
+class FrontApplication
 
 fun main(args: Array<String>) {
-    runApplication<SpApplication>(*args)
+    runApplication<FrontApplication>(*args)
 }
