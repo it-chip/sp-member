@@ -5,6 +5,7 @@ val springCloudVersion: String by extra { "Hoxton.SR8" }
 val querydslVersion: String by extra { "4.3.1" }
 val coroutineVersion: String by extra { "1.3.9" }
 val springRestdocsVersion: String by extra { "2.0.4.RELEASE" }
+val flywayVersion: String by extra("6.3.3")
 
 buildscript {
     repositories {
@@ -30,6 +31,28 @@ plugins {
     // PLUGIN: Spring Boot
     id("org.springframework.boot") version springBootVersion apply false
     id("io.spring.dependency-management") version springDependencyManagementVersion
+
+    // PLUGIN: flyway
+    id("org.flywaydb.flyway") version "6.5.5"
+}
+
+flyway {
+    table = "member_flyway_schema_history"
+    locations = arrayOf("filesystem:${rootProject.projectDir}/flyway/migration")
+    url = property("database.url") as String
+    user = property("database.username") as String
+    password = property("database.password") as String
+}
+
+tasks {
+    flywayClean {
+        enabled = false
+        doLast { println("flywayClean is not available.") }
+    }
+    flywayUndo {
+        enabled = false
+        doLast { println("flywayUndo is not available.") }
+    }
 }
 
 allprojects {
@@ -63,6 +86,14 @@ subprojects {
 
 
     dependencies {
+
+        apply(plugin = "org.jetbrains.kotlin.plugin.spring")
+        apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
+        apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
+
+        apply(plugin = "org.springframework.boot")
+        apply(plugin = "io.spring.dependency-management")
+
         implementation(kotlin("stdlib-jdk8"))
         implementation(kotlin("reflect"))
 
@@ -77,12 +108,9 @@ subprojects {
 
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-        apply(plugin = "org.jetbrains.kotlin.plugin.spring")
-        apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
-        apply(plugin = "org.jetbrains.kotlin.plugin.allopen")
-
-        apply(plugin = "org.springframework.boot")
-        apply(plugin = "io.spring.dependency-management")
+        // Flyway
+        testImplementation("org.flywaydb:flyway-core:$flywayVersion")
+        testImplementation("org.flywaydb.flyway-test-extensions:flyway-spring-test:$flywayVersion")
 
         // Query DSL
         implementation("com.querydsl:querydsl-jpa:${querydslVersion}")
