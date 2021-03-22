@@ -12,9 +12,9 @@ spring:
     name: member-front
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://15.165.213.153:3306/member?serverTimezone=Asia/Seoul&useSSL=false
+    url: jdbc:mysql://15.165.213.153:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false
     username: root
-    password: a90a1027a
+    password: root1234
   jpa:
     database: mysql
     show-sql: true
