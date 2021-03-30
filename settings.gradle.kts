@@ -1,2 +1,2 @@
 rootProject.name = "sp-member"
-include("front", "internal")
+include("core", "front", "internal")

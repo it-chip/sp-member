@@ -119,6 +119,11 @@ subprojects {
         }
         kapt("com.querydsl:querydsl-apt:${querydslVersion}:jpa")
 
+        // JSON
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+        implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
+
         dependencyManagement {
             imports {
                 mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
@@ -130,7 +135,7 @@ subprojects {
     if (project.name != "core") {
 
         dependencies {
-
+            implementation(project(":core"))
             kapt("org.springframework.boot:spring-boot-configuration-processor")
             // Spring Boot
             implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -143,18 +148,12 @@ subprojects {
             implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix")
 
             implementation("org.springframework.security:spring-security-core:3.0.3.RELEASE")
-            implementation("org.jasypt:jasypt-springsecurity3:1.9.2")
+            implementation("org.jasypt:jasypt-springsecurity4:1.9.3")
 
             implementation("org.modelmapper:modelmapper:2.3.2")
             implementation("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
 
             runtimeOnly("mysql:mysql-connector-java")
-
-            // JSON
-            implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-            implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-            implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
-
 
             testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("io.projectreactor:reactor-test")
