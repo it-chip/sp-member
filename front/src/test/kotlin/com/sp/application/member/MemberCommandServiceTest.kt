@@ -1,14 +1,15 @@
 package com.sp.application.member
 
+import com.sp.application.auth.*
 import com.sp.domain.member.*
 import com.sp.presentation.request.*
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.*
 import kotlinx.coroutines.*
-import org.jasypt.springsecurity4.crypto.password.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.*
+import org.springframework.transaction.support.*
 
 /**
  * @author Jaedoo Lee
@@ -20,13 +21,21 @@ internal class MemberCommandServiceTest {
     private lateinit var memberDomainService: MemberDomainService
 
     @MockK
-    private lateinit var passwordEncoder: PasswordEncoder
+    private lateinit var transactionTemplate: TransactionTemplate
+
+    @MockK
+    private lateinit var authQueryService: AuthQueryService
 
     private lateinit var memberCommandService: MemberCommandService
 
     @BeforeEach
     fun setUp() {
-        memberCommandService = MemberCommandService(memberDomainService, passwordEncoder)
+        memberCommandService =
+            MemberCommandService(memberDomainService, transactionTemplate, authQueryService)
+
+        every { transactionTemplate.execute(any<TransactionCallback<*>>()) } answers {
+            (firstArg() as TransactionCallback<*>).doInTransaction(mockk())
+        }
     }
 
     @Test
@@ -39,7 +48,6 @@ internal class MemberCommandServiceTest {
         )
 
         // when
-        coEvery { passwordEncoder.encode(any()) } returns "encoded"
         coEvery { memberDomainService.register(any()) } returns 1L
         runBlocking {
             memberCommandService.registerMember(request)
@@ -47,7 +55,6 @@ internal class MemberCommandServiceTest {
 
         // then
         coVerify {
-            passwordEncoder.encode(any())
             memberDomainService.register(any())
         }
     }

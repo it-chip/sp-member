@@ -16,4 +16,8 @@ class MemberDomainService(
         return memberRepository.save(Member.create(params.valueOf())).no
     }
 
+    fun checkMemberInfo(email: String): Member? {
+        return memberRepository.findByEmail(email)
+    }
+
 }

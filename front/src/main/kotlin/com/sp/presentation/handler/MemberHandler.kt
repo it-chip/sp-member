@@ -21,4 +21,11 @@ class MemberHandler(
 
         return created(URI.create(memberNo.toString())).buildAndAwait()
     }
+
+    suspend fun createToken(request: ServerRequest): ServerResponse {
+        val params = request.awaitBody<LoginRequest>()
+            .also { it.validate() }
+
+        return ok().bodyValueAndAwait(memberCommandService.createToken(params))
+    }
 }

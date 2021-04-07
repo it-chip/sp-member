@@ -19,7 +19,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -28,6 +28,27 @@ spring:
         format-sql: true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 4000
+        readTimeout: 4000
+        loggerLevel: full
+
+auth-internal:
+  ribbon:
+    listOfServers: http://localhost:8083
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown,info
 
 eureka:
   instance:

@@ -57,5 +57,25 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
             .expectStatus().isCreated
     }
 
+    @Test
+    fun `토큰 발급`() {
+        val request = LoginRequest(
+            email = "dlwoen9@naver.com",
+            password = "qwert12345"
+        )
+
+        val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJubyI6MSwibmlja25hbWUiOiJlbmVuIiwiaXNzIjoiU1AiLCJpYXQiOjE2MTc2MzYwNzcsImVtYWlsIjoiZGx3b2VuOUBuYXZlci5jb20ifQ.rrATAXpcrhAo6nG3KqZOu_IqFGr5NxUk_Hg9h3FJajk"
+
+        coEvery { memberCommandService.createToken(request) } returns token
+
+        webTestClient.post()
+            .uri("/backend/members/login")
+            .header("Version", "1.0")
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isOk
+    }
 
 }

@@ -17,6 +17,7 @@ class MemberRouter(private val memberHandler: MemberHandler) {
             ("/backend/members" and headers { "1.0" in it.header("Version") }).nest {
                 accept(MediaType.APPLICATION_JSON).nest {
                     POST("", memberHandler::signUp)
+                    POST("login", memberHandler::createToken)
                 }
             }
         }

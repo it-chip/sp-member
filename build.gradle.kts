@@ -124,6 +124,8 @@ subprojects {
         implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
         implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
 
+        implementation("org.jasypt:jasypt-springsecurity4:1.9.3")
+
         dependencyManagement {
             imports {
                 mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
@@ -136,19 +138,15 @@ subprojects {
 
         dependencies {
             implementation(project(":core"))
+            implementation("org.springframework.boot:spring-boot-starter-actuator")
             kapt("org.springframework.boot:spring-boot-configuration-processor")
             // Spring Boot
             implementation("org.springframework.boot:spring-boot-starter-webflux")
-
-            // Spring Cloud
-            implementation("org.springframework.cloud:spring-cloud-starter-config")
-            implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
             // Circuit Breaker
             implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix")
 
             implementation("org.springframework.security:spring-security-core:3.0.3.RELEASE")
-            implementation("org.jasypt:jasypt-springsecurity4:1.9.3")
 
             implementation("org.modelmapper:modelmapper:2.3.2")
             implementation("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
