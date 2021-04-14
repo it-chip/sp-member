@@ -9,7 +9,12 @@ val flywayVersion: String by extra("6.3.3")
 
 buildscript {
     repositories {
-        repositories { mavenCentral() }
+        mavenCentral()
+        maven ("https://plugins.gradle.org/m2/")
+    }
+
+    dependencies {
+        classpath ("com.epages:restdocs-api-spec-gradle-plugin:0.11.3") //1.2
     }
 }
 
@@ -136,6 +141,9 @@ subprojects {
 
     if (project.name != "core") {
 
+        // Document
+        apply(plugin = "com.epages.restdocs-api-spec")
+
         dependencies {
             implementation(project(":core"))
             implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -172,7 +180,7 @@ subprojects {
 
             // documentation
             testImplementation("org.springframework.restdocs:spring-restdocs-webtestclient:${springRestdocsVersion}")
-//            testImplementation("com.epages:restdocs-api-spec:0.8.2")
+            testImplementation("com.epages:restdocs-api-spec:0.11.3")
 
             // MockK
             testImplementation("io.mockk:mockk:1.10.0")

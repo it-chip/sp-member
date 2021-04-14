@@ -1,13 +1,46 @@
+server:
+  port: 8081
+
 spring:
   profiles:
     active: local # 기본 환경 선택
 
 # local 환경
 ---
-server:
-  port: 8081
-
 spring:
+  profiles: local
+  application:
+    name: member-internal
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false
+    username: root
+    password: a90a1027a
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format-sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+# local 환경
+---
+spring:
+  profiles: local
   application:
     name: member-internal
   datasource:
@@ -19,7 +52,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
