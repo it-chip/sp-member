@@ -65,11 +65,15 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
             .expectHeader().valueEquals(HttpHeaders.LOCATION, memberNo.toString())
             .expectBody().consumeWith(
                 WebTestClientRestDocumentation.document(
-                    "회원 가입",
+                    "member-sign-up",
                     ResourceDocumentation.resource(
                         ResourceSnippetParameters.builder()
                             .tag(TAG)
                             .description("회원 가입")
+                            .requestHeaders(
+                                ResourceDocumentation.headerWithName("Version")
+                                    .description("버전")
+                            )
                             .requestFields(
                                 PayloadDocumentation.fieldWithPath("email")
                                     .description("이메일 주소(아이디)")
@@ -107,11 +111,16 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
             .expectStatus().isOk
             .expectBody().consumeWith(
                 WebTestClientRestDocumentation.document(
-                    "로그인",
+                    "member-login",
                     ResourceDocumentation.resource(
                         ResourceSnippetParameters.builder()
                             .tag(TAG)
-                            .description("로그인")
+                            .summary("회원 로그인")
+                            .description("회원 로그인")
+                            .requestHeaders(
+                                ResourceDocumentation.headerWithName("Version")
+                                    .description("버전")
+                            )
                             .requestFields(
                                 PayloadDocumentation.fieldWithPath("email")
                                     .description("이메일 주소(아이디)")
