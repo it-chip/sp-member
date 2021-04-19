@@ -137,6 +137,8 @@ subprojects {
             }
         }
 
+        implementation("org.apache.commons:commons-pool2")
+
     }
 
     if (project.name != "core") {
