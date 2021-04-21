@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.*
 /**
  * @author Jaedoo Lee
  */
-interface MemberRepository : JpaRepository<Member, Long>
+interface MemberRepository : JpaRepository<Member, Long> {
+    fun findByEmail(email: String): Member?
+}

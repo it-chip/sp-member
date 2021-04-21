@@ -54,14 +54,12 @@ internal class MemberHandlerTest {
                 .from(request)
                 .let { ServerRequest.create(it, HandlerStrategies.withDefaults().messageReaders()) }
 
-//        mockkObject(URIUtils)
-//        every { URIUtils.createdResourceURI(request, any()) } returns returnUri
         coEvery { memberCommandService.registerMember(any()) } returns 1L
+
         //when
         val response = runBlocking { memberHandler.signUp(exchange) }
         //then
         assertEquals(HttpStatus.CREATED, response.statusCode())
-//        assertEquals(returnUri.toString(), response.headers()["Location"]?.first())
         coVerify { memberCommandService.registerMember(any()) }
     }
 

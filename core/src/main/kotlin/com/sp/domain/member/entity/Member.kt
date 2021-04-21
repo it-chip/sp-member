@@ -1,6 +1,7 @@
 package com.sp.domain.member.entity
 
 import com.sp.domain.member.model.*
+import com.sp.domain.member.util.*
 import java.time.*
 import javax.persistence.*
 
@@ -36,5 +37,13 @@ data class Member(
             password = params.password,
             nickname = params.nickname
         )
+    }
+
+    fun matchesPassword(rawPassword: String): Boolean {
+        return try {
+            MemberPasswordEncryptor.matches(password, rawPassword)
+        } catch (e: Exception) {
+            false
+        }
     }
 }
