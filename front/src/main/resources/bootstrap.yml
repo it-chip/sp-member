@@ -63,7 +63,7 @@ spring:
   profiles: alpha
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://15.165.213.153:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://localhost:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false
     username: root
     password: root1234
   jpa:
