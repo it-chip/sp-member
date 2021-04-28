@@ -28,22 +28,21 @@ class MemberRepositoryTest(
     @Test
     fun `생성 테스트`() {
         //given
-        val expected = Member(
-            no = 1L,
+        val request = Member(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
             nickname = "두두"
         )
 
         //when
-        val saved = memberRepository.save(expected)
+        val saved = memberRepository.save(request)
 
         //then
         val result = memberRepository.findById(saved.no).get()
-        assertEquals(expected.no, result.no)
-        assertEquals(expected.email, result.email)
-        assertEquals(expected.password, result.password)
-        assertEquals(expected.nickname, result.nickname)
+        assertEquals(saved.no, result.no)
+        assertEquals(request.email, result.email)
+        assertEquals(request.password, result.password)
+        assertEquals(request.nickname, result.nickname)
     }
 
     @Test
