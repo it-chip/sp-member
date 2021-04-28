@@ -37,6 +37,8 @@ plugins {
     id("org.springframework.boot") version springBootVersion apply false
     id("io.spring.dependency-management") version springDependencyManagementVersion
 
+    id("com.adarshr.test-logger") version "2.0.0"
+
     // PLUGIN: flyway
     id("org.flywaydb.flyway") version "6.5.5"
 }
@@ -145,6 +147,7 @@ subprojects {
 
         // Document
         apply(plugin = "com.epages.restdocs-api-spec")
+        apply(plugin = "com.adarshr.test-logger")
 
         dependencies {
             implementation(project(":core"))
@@ -166,6 +169,11 @@ subprojects {
             testImplementation("org.springframework.boot:spring-boot-starter-test")
             testImplementation("io.projectreactor:reactor-test")
             implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
+
+            // Log & Crash Dependency
+            implementation("org.json:json:20171018")
+            implementation("org.apache.httpcomponents:httpclient:4.5")
+            implementation("ch.qos.logback:logback-classic:1.2.3")
 
             // coroutine
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutineVersion}")
@@ -189,6 +197,9 @@ subprojects {
 
             // Spring mockK
             testImplementation("com.ninja-squad:springmockk:2.0.3")
+
+            implementation("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
+            implementation("org.codehaus.janino:janino:3.0.15")
         }
 
         tasks {
