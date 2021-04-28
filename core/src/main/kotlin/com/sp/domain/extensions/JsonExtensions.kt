@@ -28,3 +28,4 @@ val objectMapper: ObjectMapper = ObjectMapper().apply {
 }
 
 fun Any.toJson(): String = objectMapper.writeValueAsString(this)
+inline fun <reified T> String.toModel(): T = objectMapper.readValue(this, jacksonTypeRef<T>())
