@@ -1,15 +1,15 @@
-spring:
-  profiles:
-    active: local # 기본 환경 선택
-
-# local 환경
----
 server:
   port: 8081
 
 spring:
+  profiles:
+    active: alpha # 기본 환경 선택
   application:
     name: member-internal
+
+# local 환경
+---
+spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://15.165.213.153:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false
@@ -28,6 +28,51 @@ spring:
         format-sql: true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 4000
+        readTimeout: 4000
+        loggerLevel: full
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+# alpha 환경
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sp_member?serverTimezone=Asia/Seoul&useSSL=false
+    username: root
+    password: root1234
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format-sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 4000
+        readTimeout: 4000
+        loggerLevel: full
 
 eureka:
   instance:
