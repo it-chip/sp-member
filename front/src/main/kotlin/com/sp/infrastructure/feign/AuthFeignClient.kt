@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.*
 interface AuthFeignClient {
 
     @PostMapping(value = ["internal/auth/token"], headers = ["Version=1.0"])
-    fun createToken(@SpringQueryMap loginInfo: LoginInfoRequest): String
+    fun createToken(@RequestBody loginInfo: LoginInfoRequest): String
 }
