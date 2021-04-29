@@ -29,7 +29,7 @@ class MemberRepositoryTest(
     fun `생성 테스트`() {
         //given
         val request = Member(
-            email = "dlwoen9@naver.com",
+            email = "test@naver.com",
             password = "qwert12345",
             nickname = "두두"
         )
@@ -49,8 +49,7 @@ class MemberRepositoryTest(
     fun `아이디(email) 조회 테스트`() {
         //given
         val expected = Member(
-            no = 1L,
-            email = "dlwoen9@naver.com",
+            email = "test@naver.com",
             password = "qwert12345",
             nickname = "두두"
         )
@@ -60,25 +59,23 @@ class MemberRepositoryTest(
 
         //then
         val result = memberRepository.findByEmail(expected.email)
-        assertEquals(expected.email, result!!.email)
+        assertEquals(saved.no, result!!.no)
     }
 
     @Test
     fun `아이디(email) 조회 실패 테스트`() {
         //given
         val expected = Member(
-            no = 1L,
-            email = "dlwoen9@naver.com",
+            email = "test@naver.com",
             password = "qwert12345",
             nickname = "두두"
         )
 
         //when
-        val saved = memberRepository.save(expected)
+        memberRepository.save(expected)
 
         //then
-        val result = memberRepository.findByEmail("${expected.email}1")
-        assertNotEquals("${expected.email}1", expected.email)
+        assertNull(memberRepository.findByEmail("아이디가될수없는요상한값"))
     }
 
 }
