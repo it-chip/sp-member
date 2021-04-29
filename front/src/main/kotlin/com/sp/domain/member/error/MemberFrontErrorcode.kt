@@ -8,6 +8,7 @@ import com.sp.domain.*
 enum class MemberFrontErrorcode(override val simpleCode: String) : ErrorCode {
 
     INVALID_LOGIN_INFO("MF001"),
+    DUPLICATED_EMAIL("MF002")
     ;
 
     override val code: String
