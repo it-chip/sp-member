@@ -199,7 +199,7 @@ subprojects {
             testImplementation("com.ninja-squad:springmockk:2.0.3")
 
             implementation("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16")
-            implementation("org.codehaus.janino:janino:3.0.15")
+            implementation("org.codehaus.janino:janino:3.0.15") // 설정 파일(xml)에서 JAVA 표현식(if 등)을 사용할 수 있게 해주는 라이브러리
         }
 
         tasks {
