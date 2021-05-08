@@ -15,13 +15,13 @@ import org.springframework.transaction.support.*
 class MemberCommandService(
     private val memberDomainService: MemberDomainService,
     private val transactionTemplate: TransactionTemplate,
-    private val authQueryService: AuthQueryService
+    private val authQueryService: AuthQueryService,
+    private val memberRepository: MemberRepository
 ) {
 
     suspend fun registerMember(params: MemberRegisterRequest): Long {
-        return transactionTemplate.execute {
-            memberDomainService.register(params)
-        }!!
+        validateDuplicatedEmail(params.email)
+        return memberDomainService.register(params)
     }
 
     suspend fun createToken(params: LoginRequest): String {
@@ -32,6 +32,10 @@ class MemberCommandService(
         return member
             .also { it.matchesPassword(params.password) }
             .let { authQueryService.createToken(LoginInfoRequest(member)) }
+    }
+
+    private fun validateDuplicatedEmail(email: String) {
+        if (memberRepository.findByEmail(email) != null) throw DuplicatedEmailException();
     }
 
 }

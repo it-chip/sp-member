@@ -12,3 +12,5 @@ abstract class AbstractMemberFrontExceptions(
 ) : MemberFrontException(errorCode, args)
 
 class LoginException : AbstractMemberFrontExceptions(INVALID_LOGIN_INFO)
+
+class DuplicatedEmailException : AbstractMemberFrontExceptions(DUPLICATED_EMAIL)
