@@ -3,7 +3,6 @@ package com.sp.application.member
 import com.sp.application.auth.*
 import com.sp.domain.member.*
 import com.sp.domain.member.entity.*
-import com.sp.presentation.request.*
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.*
@@ -11,7 +10,6 @@ import kotlinx.coroutines.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.*
 import org.springframework.transaction.support.*
-import java.time.*
 
 /**
  * @author Jaedoo Lee
@@ -46,7 +44,7 @@ internal class MemberCommandServiceTest {
     @Test
     fun `회원 가입`() {
         // given
-        val request = MemberRegisterRequest(
+        val params = MemberRegisterParams(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
             nickname = "두두"
@@ -56,7 +54,7 @@ internal class MemberCommandServiceTest {
         coEvery { memberRepository.findByEmail(any()) } returns null
         coEvery { memberDomainService.register(any()) } returns 1L
         runBlocking {
-            memberCommandService.registerMember(request)
+            memberCommandService.registerMember(params)
         }
 
         // then
@@ -68,7 +66,7 @@ internal class MemberCommandServiceTest {
     @Test
     fun `중복 이메일로 회원 가입 시도 테스트`() {
         // given
-        val request = MemberRegisterRequest(
+        val params = MemberRegisterParams(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
             nickname = "두두"
@@ -76,10 +74,9 @@ internal class MemberCommandServiceTest {
 
         val member = Member(
             no = 1L,
-            email = request.email,
-            password = request.password,
-            nickname = request.nickname,
-            joinDateTime = LocalDateTime.now()
+            email = params.email,
+            password = params.password,
+            nickname = params.nickname,
         )
 
         // when
@@ -88,9 +85,31 @@ internal class MemberCommandServiceTest {
         // then
         assertThrows<DuplicatedEmailException> {
             runBlocking {
-                memberCommandService.registerMember(request)
+                memberCommandService.registerMember(params)
             }
         }
     }
+
+    @Test
+    fun `회원 정보 수정`() {
+        // given
+        val params = MemberProfileParams(
+            no = 1L,
+            nickname = "두두"
+        )
+
+        // when
+        coEvery { memberDomainService.update(any()) } just runs
+        runBlocking {
+            memberCommandService.update(params)
+        }
+
+        // then
+        coVerify {
+            memberDomainService.update(any())
+        }
+
+    }
+
 
 }

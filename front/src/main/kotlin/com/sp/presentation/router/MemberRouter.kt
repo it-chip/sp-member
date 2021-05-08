@@ -18,6 +18,7 @@ class MemberRouter(private val memberHandler: MemberHandler) {
                 accept(MediaType.APPLICATION_JSON).nest {
                     POST("", memberHandler::signUp)
                     POST("login", memberHandler::createToken)
+                    PUT("profile", memberHandler::modifyProfile)
                 }
             }
         }

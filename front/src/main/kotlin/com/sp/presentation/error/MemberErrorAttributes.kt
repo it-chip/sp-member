@@ -51,14 +51,14 @@ class MemberErrorAttributes : ErrorAttributes {
         )
             ?.code
             ?: HttpStatus.BAD_REQUEST
-        is TokenException -> HttpStatus.UNAUTHORIZED
+        is CommonException -> HttpStatus.UNAUTHORIZED
         else -> HttpStatus.INTERNAL_SERVER_ERROR
     }
 
     private fun determineCode(error: Throwable): String = when (error) {
         is TypeMismatchException, is DecodingException, is NumberFormatException -> CommonErrorCode.REQUEST_ERROR.simpleCode
         is MemberFrontException -> error.errorCode.simpleCode
-        is TokenException -> error.errorCode.simpleCode
+        is CommonException -> error.errorCode.simpleCode
         else -> "99999"
     }
 
@@ -67,7 +67,7 @@ class MemberErrorAttributes : ErrorAttributes {
         is TypeMismatchException, is DecodingException, is NumberFormatException ->
             MessageConverter.getMessage(CommonErrorCode.REQUEST_ERROR.code)
         is MemberFrontException -> error.message
-        is TokenException -> error.message
+        is CommonException -> error.message
         else -> if (internalApi) "${error.message}" else "Server error"
     }
 }

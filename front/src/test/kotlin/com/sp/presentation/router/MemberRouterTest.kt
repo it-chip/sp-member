@@ -23,7 +23,7 @@ import org.springframework.test.web.reactive.server.*
  */
 @WebFluxTest
 @ExtendWith(RestDocumentationExtension::class)
-@ContextConfiguration(classes = [MemberRouter::class, MemberHandler::class])
+@ContextConfiguration(classes = [MemberRouter::class, MemberHandler::class, MemberInfoFilter::class])
 internal class MemberRouterTest(private val context: ApplicationContext) {
 
     private lateinit var webTestClient: WebTestClient
@@ -128,6 +128,47 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                 PayloadDocumentation.fieldWithPath("password")
                                     .description("비밀번호")
                                     .type(JsonFieldType.STRING)
+                            ).build()
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `회원 정보 수정`() {
+        val request = MemberProfileRequest(
+            nickname = "두두루두두"
+        )
+
+        coEvery { memberCommandService.update(any()) } just runs
+
+        webTestClient.put()
+            .uri("/members/profile")
+            .header("Version", "1.0")
+            .header(MemberInfoConstant.ACCESS_TOKEN_HEADER, MemberInfoConstant.TEST_ACCESS_TOKEN)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .accept(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus().isNoContent
+            .expectBody().consumeWith(
+                WebTestClientRestDocumentation.document(
+                    "member-profile-update",
+                    ResourceDocumentation.resource(
+                        ResourceSnippetParameters.builder()
+                            .tag(TAG)
+                            .summary("회원 정보 수정")
+                            .description("회원 정보(닉네임) 수정")
+                            .requestHeaders(
+                                ResourceDocumentation.headerWithName("Version")
+                                    .description("버전"),
+                                ResourceDocumentation.headerWithName(MemberInfoConstant.ACCESS_TOKEN_HEADER)
+                                    .description("AccessToken")
+                            )
+                            .requestFields(
+                                PayloadDocumentation.fieldWithPath("nickname")
+                                    .description("회원 닉네임")
+                                    .type(JsonFieldType.STRING),
                             ).build()
                     )
                 )

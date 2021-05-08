@@ -1,6 +1,6 @@
 package com.sp.presentation.request
 
-import com.sp.domain.member.*
+import com.sp.domain.*
 
 /**
  * @author Jaedoo Lee
@@ -10,6 +10,7 @@ data class LoginRequest(
     val password: String,
 ) {
     fun validate() {
-        if (email.isBlank() || password.isBlank()) throw LoginException()
+        if (email.isBlank() || password.isBlank())
+            throw RequestException("email, password")
     }
 }
