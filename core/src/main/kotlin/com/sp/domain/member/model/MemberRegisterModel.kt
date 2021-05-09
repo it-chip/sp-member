@@ -6,5 +6,5 @@ package com.sp.domain.member.model
 data class MemberRegisterModel(
     val email: String,
     val password: String,
-    val nickname: String?
+    val nickname: String
 )

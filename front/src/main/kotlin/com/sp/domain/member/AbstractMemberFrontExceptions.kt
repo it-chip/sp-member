@@ -1,16 +1,14 @@
 package com.sp.domain.member
 
 import com.sp.domain.member.error.*
-import com.sp.domain.member.error.MemberFrontErrorcode.*
+import com.sp.domain.member.error.MemberErrorCode.*
 
 /**
  * @author Jaedoo Lee
  */
 abstract class AbstractMemberFrontExceptions(
-    errorCode: MemberFrontErrorcode,
+    errorCode: MemberErrorCode,
     vararg args: Any
 ) : MemberFrontException(errorCode, args)
-
-class LoginException : AbstractMemberFrontExceptions(INVALID_LOGIN_INFO)
 
 class DuplicatedEmailException : AbstractMemberFrontExceptions(DUPLICATED_EMAIL)

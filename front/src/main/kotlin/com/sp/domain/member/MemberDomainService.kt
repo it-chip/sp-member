@@ -1,8 +1,10 @@
 package com.sp.domain.member
 
+import com.sp.application.member.*
 import com.sp.domain.*
 import com.sp.domain.member.entity.*
-import com.sp.presentation.request.*
+import com.sp.domain.member.model.*
+import org.springframework.data.repository.*
 
 /**
  * @author Jaedoo Lee
@@ -12,12 +14,20 @@ class MemberDomainService(
     private val memberRepository: MemberRepository
 ) {
 
-    fun register(params: MemberRegisterRequest): Long {
-        return memberRepository.save(Member.create(params.valueOf())).no
+    fun register(params: MemberRegisterModel): Long {
+        return memberRepository.save(Member.create(params)).no
     }
 
     fun checkMemberInfo(email: String): Member? {
         return memberRepository.findByEmail(email)
+    }
+
+    fun update(params: MemberProfileParams) {
+        with(params) {
+            memberRepository.findByIdOrNull(no)?.also  {
+                it.modify(nickname)
+            } ?: throw RequestException("memberNo : ${no}")
+        }
     }
 
 }

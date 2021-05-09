@@ -1,6 +1,6 @@
 package com.sp.presentation.request
 
-import com.sp.domain.member.model.*
+import com.sp.application.member.*
 import com.sp.domain.member.util.*
 
 /**
@@ -11,7 +11,7 @@ data class MemberRegisterRequest(
     val password: String,
     val nickname: String
 ) {
-    fun valueOf() = MemberRegisterModel(
+    fun valueOf() = MemberRegisterParams(
         email = email,
         password = MemberPasswordEncryptor.encode(password),
         nickname = nickname
