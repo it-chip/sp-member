@@ -24,8 +24,8 @@ class MemberDomainService(
 
     fun update(params: MemberProfileParams) {
         with(params) {
-            memberRepository.findByIdOrNull(no)?.apply {
-                modify(nickname)
+            memberRepository.findByIdOrNull(no)?.also  {
+                it.modify(nickname)
             } ?: throw RequestException("memberNo : ${no}")
         }
     }
