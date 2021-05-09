@@ -38,6 +38,15 @@ feign:
         readTimeout: 4000
         loggerLevel: full
 
+logging:
+  level:
+    # http call log
+    org.springframework.web.reactive.function.client: TRACE
+    # transaction start,end log
+    org.springframework.transaction.interceptor: TRACE
+    # query log
+    jdbc.sqltiming: TRACE
+
 eureka:
   instance:
     prefer-ip-address: true
@@ -75,6 +84,15 @@ feign:
         connectTimeout: 4000
         readTimeout: 4000
         loggerLevel: full
+
+logging:
+  level:
+    # http call log
+    org.springframework.web.reactive.function.client: TRACE
+    # transaction start,end log
+    org.springframework.transaction.interceptor: TRACE
+    # query log
+    jdbc.sqltiming: TRACE
 
 eureka:
   instance:
