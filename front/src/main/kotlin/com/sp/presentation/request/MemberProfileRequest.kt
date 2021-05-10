@@ -1,7 +1,7 @@
 package com.sp.presentation.request
 
 import com.sp.application.member.*
-import com.sp.domain.*
+import com.sp.domain.member.*
 
 /**
  * @author Jaedoo Lee
