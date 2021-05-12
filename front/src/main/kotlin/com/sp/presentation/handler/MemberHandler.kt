@@ -3,6 +3,7 @@ package com.sp.presentation.handler
 import com.sp.application.member.*
 import com.sp.presentation.*
 import com.sp.presentation.request.*
+import com.sp.presentation.response.*
 import org.springframework.stereotype.*
 import org.springframework.web.reactive.function.server.*
 import org.springframework.web.reactive.function.server.ServerResponse.*
@@ -27,7 +28,7 @@ class MemberHandler(
         val params = request.awaitBody<LoginRequest>()
             .also { it.validate() }
 
-        return ok().bodyValueAndAwait(memberCommandService.createToken(params))
+        return ok().bodyValueAndAwait(AccessTokenResponse(memberCommandService.createToken(params)))
     }
 
     suspend fun modifyProfile(request: ServerRequest): ServerResponse {

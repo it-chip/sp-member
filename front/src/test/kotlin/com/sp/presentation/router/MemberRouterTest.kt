@@ -6,6 +6,7 @@ import com.sp.application.member.*
 import com.sp.presentation.*
 import com.sp.presentation.handler.*
 import com.sp.presentation.request.*
+import com.sp.presentation.response.*
 import io.mockk.*
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.*
@@ -14,6 +15,7 @@ import org.springframework.context.*
 import org.springframework.http.*
 import org.springframework.restdocs.*
 import org.springframework.restdocs.payload.*
+import org.springframework.restdocs.payload.PayloadDocumentation.*
 import org.springframework.restdocs.webtestclient.*
 import org.springframework.test.context.*
 import org.springframework.test.web.reactive.server.*
@@ -75,13 +77,13 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                     .description("버전")
                             )
                             .requestFields(
-                                PayloadDocumentation.fieldWithPath("email")
+                                fieldWithPath("email")
                                     .description("이메일 주소(아이디)")
                                     .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("password")
+                                fieldWithPath("password")
                                     .description("비밀번호")
                                     .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("nickname")
+                                fieldWithPath("nickname")
                                     .description("닉네임")
                                     .type(JsonFieldType.STRING)
                             ).build()
@@ -97,9 +99,11 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
             password = "qwert12345"
         )
 
-        val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJubyI6MSwibmlja25hbWUiOiJlbmVuIiwiaXNzIjoiU1AiLCJpYXQiOjE2MTc2MzYwNzcsImVtYWlsIjoiZGx3b2VuOUBuYXZlci5jb20ifQ.rrATAXpcrhAo6nG3KqZOu_IqFGr5NxUk_Hg9h3FJajk"
+        val response = AccessTokenResponse(
+            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJubyI6MSwibmlja25hbWUiOiJlbmVuIiwiaXNzIjoiU1AiLCJpYXQiOjE2MTc2MzYwNzcsImVtYWlsIjoiZGx3b2VuOUBuYXZlci5jb20ifQ.rrATAXpcrhAo6nG3KqZOu_IqFGr5NxUk_Hg9h3FJajk"
+        )
 
-        coEvery { memberCommandService.createToken(request) } returns token
+        coEvery { memberCommandService.createToken(request) } returns response.token
 
         webTestClient.post()
             .uri("/members/login")
@@ -122,13 +126,18 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                     .description("버전")
                             )
                             .requestFields(
-                                PayloadDocumentation.fieldWithPath("email")
+                                fieldWithPath("email")
                                     .description("이메일 주소(아이디)")
                                     .type(JsonFieldType.STRING),
-                                PayloadDocumentation.fieldWithPath("password")
+                                fieldWithPath("password")
                                     .description("비밀번호")
                                     .type(JsonFieldType.STRING)
-                            ).build()
+                            )
+                            .responseFields(
+                                fieldWithPath("token").description("accessToken")
+                                    .type(JsonFieldType.STRING)
+                            )
+                            .build()
                     )
                 )
             )
@@ -166,7 +175,7 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                     .description("AccessToken")
                             )
                             .requestFields(
-                                PayloadDocumentation.fieldWithPath("nickname")
+                                fieldWithPath("nickname")
                                     .description("회원 닉네임")
                                     .type(JsonFieldType.STRING),
                             ).build()
