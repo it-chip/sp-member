@@ -1,19 +1,25 @@
 package com.sp.presentation.handler
 
-import com.sp.application.member.*
-import com.sp.domain.extensions.*
-import com.sp.presentation.request.*
-import io.mockk.*
+import com.sp.application.member.MemberCommandService
+import com.sp.domain.extensions.toJson
+import com.sp.presentation.request.MemberRegisterRequest
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.*
-import kotlinx.coroutines.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.extension.*
-import org.springframework.http.*
-import org.springframework.mock.http.server.reactive.*
-import org.springframework.mock.web.server.*
-import org.springframework.web.reactive.function.server.*
+import io.mockk.junit5.MockKExtension
+import io.mockk.unmockkAll
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.mock.http.server.reactive.MockServerHttpRequest
+import org.springframework.mock.web.server.MockServerWebExchange
+import org.springframework.web.reactive.function.server.HandlerStrategies
+import org.springframework.web.reactive.function.server.ServerRequest
 
 /**
  * @author Jaedoo Lee
@@ -46,7 +52,7 @@ internal class MemberHandlerTest {
 
         val request =
             MockServerHttpRequest
-                .post("/backend/members")
+                .post("/front/members")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(requestBody.toJson())
         val exchange =
