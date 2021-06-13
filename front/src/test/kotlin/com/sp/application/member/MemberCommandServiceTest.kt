@@ -1,15 +1,20 @@
 package com.sp.application.member
 
-import com.sp.application.auth.*
-import com.sp.domain.member.*
-import com.sp.domain.member.entity.*
+import com.sp.application.auth.AuthQueryService
+import com.sp.domain.member.DuplicatedEmailException
+import com.sp.domain.member.MemberDomainService
+import com.sp.domain.member.MemberRepository
+import com.sp.domain.member.entity.Member
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.*
-import kotlinx.coroutines.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.extension.*
-import org.springframework.transaction.support.*
+import io.mockk.junit5.MockKExtension
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.transaction.support.TransactionCallback
+import org.springframework.transaction.support.TransactionTemplate
 
 /**
  * @author Jaedoo Lee
@@ -95,18 +100,21 @@ internal class MemberCommandServiceTest {
         // given
         val params = MemberProfileParams(
             no = 1L,
-            nickname = "두두"
+            email = "dlwoen9@naver.com",
+            nickname = "두두",
+            oldPassword = "old",
+            newPassword = "new"
         )
 
         // when
-        coEvery { memberDomainService.update(any()) } just runs
+        coEvery { memberDomainService.update(any(), any()) } just runs
         runBlocking {
             memberCommandService.update(params)
         }
 
         // then
         coVerify {
-            memberDomainService.update(any())
+            memberDomainService.update(any(), any())
         }
 
     }

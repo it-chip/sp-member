@@ -1,12 +1,11 @@
 package com.sp.domain.member.entity
 
-import com.sp.domain.member.model.*
-import com.sp.domain.member.util.*
-import org.hibernate.annotations.*
-import java.time.*
+import com.sp.domain.member.model.MemberRegisterModel
+import com.sp.domain.member.model.MemberUpdateModel
+import com.sp.domain.member.util.MemberPasswordEncryptor
+import org.hibernate.annotations.DynamicUpdate
+import java.time.LocalDateTime
 import javax.persistence.*
-import javax.persistence.Entity
-import javax.persistence.Table
 
 /**
  * @author Jaedoo Lee
@@ -22,10 +21,10 @@ data class Member(
     val no: Long = 0,
 
     @Column(name = "email")
-    val email: String,
+    var email: String,
 
     @Column(name = "password")
-    val password: String,
+    var password: String,
 
     @Column(name = "nickname")
     var nickname: String = ""
@@ -54,8 +53,10 @@ data class Member(
         }
     }
 
-    fun modify(nickname: String) {
-        this.nickname = nickname
+    fun modify(params: MemberUpdateModel) {
+        if (!params.email.isNullOrBlank()) this.email = params.email
+        if (!params.newPassword.isNullOrBlank()) this.password = params.newPassword
+        if (!params.nickname.isNullOrBlank()) this.nickname = params.nickname
         this.updateDateTime = LocalDateTime.now()
     }
 }

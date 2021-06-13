@@ -1,24 +1,34 @@
 package com.sp.presentation.router
 
-import com.epages.restdocs.apispec.*
-import com.ninjasquad.springmockk.*
-import com.sp.application.member.*
-import com.sp.presentation.*
-import com.sp.presentation.handler.*
-import com.sp.presentation.request.*
-import com.sp.presentation.response.*
-import io.mockk.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.extension.*
-import org.springframework.boot.test.autoconfigure.web.reactive.*
-import org.springframework.context.*
-import org.springframework.http.*
-import org.springframework.restdocs.*
-import org.springframework.restdocs.payload.*
-import org.springframework.restdocs.payload.PayloadDocumentation.*
-import org.springframework.restdocs.webtestclient.*
-import org.springframework.test.context.*
-import org.springframework.test.web.reactive.server.*
+import com.epages.restdocs.apispec.ResourceDocumentation
+import com.epages.restdocs.apispec.ResourceSnippetParameters
+import com.ninjasquad.springmockk.MockkBean
+import com.sp.application.member.MemberCommandService
+import com.sp.presentation.FrontApiTestSupportFilterFunction
+import com.sp.presentation.MemberInfoConstant
+import com.sp.presentation.MemberInfoFilter
+import com.sp.presentation.handler.MemberHandler
+import com.sp.presentation.request.LoginRequest
+import com.sp.presentation.request.MemberProfileRequest
+import com.sp.presentation.request.MemberRegisterRequest
+import com.sp.presentation.response.AccessTokenResponse
+import io.mockk.coEvery
+import io.mockk.just
+import io.mockk.runs
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.context.ApplicationContext
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.restdocs.RestDocumentationContextProvider
+import org.springframework.restdocs.RestDocumentationExtension
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.web.reactive.server.WebTestClient
 
 /**
  * @author Jaedoo Lee
@@ -146,7 +156,10 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
     @Test
     fun `회원 정보 수정`() {
         val request = MemberProfileRequest(
-            nickname = "두두루두두"
+            email = null,
+            nickname = "두두루두두",
+            oldPassword = null,
+            newPassword = null
         )
 
         coEvery { memberCommandService.update(any()) } just runs
@@ -167,7 +180,12 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                         ResourceSnippetParameters.builder()
                             .tag(TAG)
                             .summary("회원 정보 수정")
-                            .description("회원 정보(닉네임) 수정")
+                            .description(
+                                """
+                                |## 회원 정보 수정
+                                |변경할 값만 request로 전송(""은 400 응답)
+                                |""".trimMargin()
+                            )
                             .requestHeaders(
                                 ResourceDocumentation.headerWithName("Version")
                                     .description("버전"),
@@ -175,9 +193,22 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                     .description("AccessToken")
                             )
                             .requestFields(
+                                fieldWithPath("email")
+                                    .description("회원 이메일(아이디)")
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
                                 fieldWithPath("nickname")
                                     .description("회원 닉네임")
-                                    .type(JsonFieldType.STRING),
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
+                                fieldWithPath("oldPassword")
+                                    .description("기존 비밀번호")
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
+                                fieldWithPath("newPassword")
+                                    .description("변경할 비밀번호")
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
                             ).build()
                     )
                 )
