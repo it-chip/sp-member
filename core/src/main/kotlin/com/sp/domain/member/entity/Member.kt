@@ -47,12 +47,15 @@ data class Member(
 
     @Column(name = "last_login_ymdt")
     var lastLoginDateTime: LocalDateTime? = null
+        private set
 
     @Column(name = "update_ymdt")
     var updateDateTime: LocalDateTime? = null
+        private set
 
     @Column(name = "login_count")
     var loginCount: Int = 0
+        private set
 
     companion object {
         fun create(params: MemberRegisterModel) = Member(
