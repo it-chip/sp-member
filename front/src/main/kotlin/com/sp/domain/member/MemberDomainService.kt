@@ -26,7 +26,7 @@ class MemberDomainService(
         with(params) {
             memberRepository.findByIdOrNull(params.no)?.also  {
                 validatePassword(it, oldPassword)
-                it.modify(params)
+                it.modifyProfile(params)
             } ?: throw RequestException("memberNo : ${no}")
         }
     }

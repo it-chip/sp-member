@@ -2,13 +2,13 @@ package com.sp.domain.member.entity
 
 import com.sp.domain.GenericEnumType
 import com.sp.domain.member.model.MemberRegisterModel
+import com.sp.domain.member.model.MemberUpdateModel
 import com.sp.domain.member.util.MemberPasswordEncryptor
 import com.sp.enums.JoinRoute
 import com.sp.enums.MemberType
 import org.hibernate.annotations.DynamicUpdate
 import org.hibernate.annotations.Type
 import java.time.LocalDateTime
-import com.sp.domain.member.model.MemberUpdateModel
 import javax.persistence.*
 
 /**
@@ -76,7 +76,7 @@ data class Member(
         }
     }
 
-    fun modify(params: MemberUpdateModel) {
+    fun modifyProfile(params: MemberUpdateModel) {
         if (!params.email.isNullOrBlank()) this.email = params.email
         if (!params.newPassword.isNullOrBlank()) this.password = params.newPassword
         if (!params.nickname.isNullOrBlank()) this.nickname = params.nickname

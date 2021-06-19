@@ -49,13 +49,13 @@ internal class MemberDomainServiceTest {
         }
 
         every { memberRepository.findByIdOrNull(any()) } returns member
-        every { member.modify(any()) } just runs
+        every { member.modifyProfile(any()) } just runs
 
         memberDomainService.update(params, oldPassword)
 
         verify {
             memberRepository.findByIdOrNull(any())
-            member.modify(any())
+            member.modifyProfile(any())
         }
     }
 
@@ -80,14 +80,14 @@ internal class MemberDomainServiceTest {
 
         every { memberRepository.findByIdOrNull(any()) } returns member
         every { member.matchesPassword(any()) } returns true
-        every { member.modify(any()) } just runs
+        every { member.modifyProfile(any()) } just runs
 
         memberDomainService.update(params, oldPassword)
 
         verify {
             memberRepository.findByIdOrNull(any())
             member.matchesPassword(any())
-            member.modify(any())
+            member.modifyProfile(any())
         }
     }
 
