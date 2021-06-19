@@ -1,15 +1,22 @@
 package com.sp.application.member
 
-import com.sp.application.auth.*
-import com.sp.domain.member.*
-import com.sp.domain.member.entity.*
+import com.sp.application.auth.AuthQueryService
+import com.sp.domain.member.DuplicatedEmailException
+import com.sp.domain.member.MemberDomainService
+import com.sp.domain.member.MemberRepository
+import com.sp.domain.member.entity.Member
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.*
-import kotlinx.coroutines.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.extension.*
-import org.springframework.transaction.support.*
+import io.mockk.junit5.MockKExtension
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.transaction.support.TransactionCallback
+import org.springframework.transaction.support.TransactionTemplate
 
 /**
  * @author Jaedoo Lee
@@ -47,7 +54,9 @@ internal class MemberCommandServiceTest {
         val params = MemberRegisterParams(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         // when
@@ -69,7 +78,9 @@ internal class MemberCommandServiceTest {
         val params = MemberRegisterParams(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         val member = Member(

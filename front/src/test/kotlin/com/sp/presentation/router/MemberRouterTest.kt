@@ -1,24 +1,37 @@
 package com.sp.presentation.router
 
-import com.epages.restdocs.apispec.*
-import com.ninjasquad.springmockk.*
-import com.sp.application.member.*
-import com.sp.presentation.*
-import com.sp.presentation.handler.*
-import com.sp.presentation.request.*
-import com.sp.presentation.response.*
-import io.mockk.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.extension.*
-import org.springframework.boot.test.autoconfigure.web.reactive.*
-import org.springframework.context.*
-import org.springframework.http.*
-import org.springframework.restdocs.*
-import org.springframework.restdocs.payload.*
-import org.springframework.restdocs.payload.PayloadDocumentation.*
-import org.springframework.restdocs.webtestclient.*
-import org.springframework.test.context.*
-import org.springframework.test.web.reactive.server.*
+import com.epages.restdocs.apispec.ResourceDocumentation
+import com.epages.restdocs.apispec.ResourceSnippetParameters
+import com.ninjasquad.springmockk.MockkBean
+import com.sp.application.member.MemberCommandService
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
+import com.sp.presentation.FrontApiTestSupportFilterFunction
+import com.sp.presentation.MemberInfoConstant
+import com.sp.presentation.MemberInfoFilter
+import com.sp.presentation.handler.MemberHandler
+import com.sp.presentation.request.LoginRequest
+import com.sp.presentation.request.MemberProfileRequest
+import com.sp.presentation.request.MemberRegisterRequest
+import com.sp.presentation.response.AccessTokenResponse
+import com.sp.presentation.toMarkdownList
+import io.mockk.coEvery
+import io.mockk.just
+import io.mockk.runs
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.context.ApplicationContext
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
+import org.springframework.restdocs.RestDocumentationContextProvider
+import org.springframework.restdocs.RestDocumentationExtension
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.web.reactive.server.WebTestClient
 
 /**
  * @author Jaedoo Lee
@@ -51,7 +64,9 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
         val request = MemberRegisterRequest(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         coEvery { memberCommandService.registerMember(any()) } returns 1L
@@ -71,7 +86,18 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                     ResourceDocumentation.resource(
                         ResourceSnippetParameters.builder()
                             .tag(TAG)
-                            .description("회원 가입")
+                            .summary("회원 가입")
+                            .description(
+                                """
+                                |## 회원 가입
+                                |
+                                |### memberType : 회원유형
+                                | ${MemberType.values().toMarkdownList()}
+                                | 
+                                |### joinRoute : 가입유형
+                                | ${JoinRoute.values().toMarkdownList()}
+                                |""".trimMargin()
+                            )
                             .requestHeaders(
                                 ResourceDocumentation.headerWithName("Version")
                                     .description("버전")
@@ -85,6 +111,12 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                     .type(JsonFieldType.STRING),
                                 fieldWithPath("nickname")
                                     .description("닉네임")
+                                    .type(JsonFieldType.STRING),
+                                fieldWithPath("memberType")
+                                    .description("회원유형")
+                                    .type(JsonFieldType.STRING),
+                                fieldWithPath("joinRoute")
+                                    .description("가입경로")
                                     .type(JsonFieldType.STRING)
                             ).build()
                     )
