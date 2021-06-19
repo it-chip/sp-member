@@ -1,15 +1,19 @@
 package com.sp.domain.member
 
-import com.sp.domain.member.entity.*
-import org.flywaydb.test.annotation.*
-import org.flywaydb.test.junit5.annotation.*
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
-import org.springframework.boot.test.autoconfigure.jdbc.*
-import org.springframework.boot.test.autoconfigure.orm.jpa.*
-import org.springframework.context.annotation.*
-import org.springframework.stereotype.*
-import org.springframework.test.context.*
+import com.sp.domain.member.entity.Member
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
+import org.flywaydb.test.annotation.FlywayTest
+import org.flywaydb.test.junit5.annotation.FlywayTestExtension
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.stereotype.Repository
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.TestConstructor
 
 /**
  * @author Jaedoo Lee
@@ -31,7 +35,9 @@ class MemberRepositoryTest(
         val request = Member(
             email = "test@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         //when
@@ -51,7 +57,9 @@ class MemberRepositoryTest(
         val expected = Member(
             email = "test@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         //when
@@ -68,7 +76,9 @@ class MemberRepositoryTest(
         val expected = Member(
             email = "test@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         //when

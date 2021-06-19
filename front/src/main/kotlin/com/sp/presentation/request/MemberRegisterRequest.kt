@@ -1,7 +1,9 @@
 package com.sp.presentation.request
 
-import com.sp.application.member.*
-import com.sp.domain.member.util.*
+import com.sp.application.member.MemberRegisterParams
+import com.sp.domain.member.util.MemberPasswordEncryptor
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
 
 /**
  * @author Jaedoo Lee
@@ -9,11 +11,15 @@ import com.sp.domain.member.util.*
 data class MemberRegisterRequest(
     val email: String,
     val password: String,
-    val nickname: String
+    val nickname: String,
+    val memberType: MemberType,
+    val joinRoute: JoinRoute
 ) {
     fun valueOf() = MemberRegisterParams(
         email = email,
         password = MemberPasswordEncryptor.encode(password),
-        nickname = nickname
+        nickname = nickname,
+        memberType = memberType,
+        joinRoute = joinRoute
     )
 }

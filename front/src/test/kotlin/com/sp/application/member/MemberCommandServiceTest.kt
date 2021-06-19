@@ -5,6 +5,8 @@ import com.sp.domain.member.DuplicatedEmailException
 import com.sp.domain.member.MemberDomainService
 import com.sp.domain.member.MemberRepository
 import com.sp.domain.member.entity.Member
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -52,7 +54,9 @@ internal class MemberCommandServiceTest {
         val params = MemberRegisterParams(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         // when
@@ -74,7 +78,9 @@ internal class MemberCommandServiceTest {
         val params = MemberRegisterParams(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         val member = Member(

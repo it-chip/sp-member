@@ -1,10 +1,14 @@
 package com.sp.domain.member.entity
 
+import com.sp.domain.GenericEnumType
 import com.sp.domain.member.model.MemberRegisterModel
-import com.sp.domain.member.model.MemberUpdateModel
 import com.sp.domain.member.util.MemberPasswordEncryptor
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
 import org.hibernate.annotations.DynamicUpdate
+import org.hibernate.annotations.Type
 import java.time.LocalDateTime
+import com.sp.domain.member.model.MemberUpdateModel
 import javax.persistence.*
 
 /**
@@ -27,21 +31,40 @@ data class Member(
     var password: String,
 
     @Column(name = "nickname")
-    var nickname: String = ""
+    var nickname: String = "",
+
+    @Type(type = GenericEnumType.NAME)
+    @Column(name = "member_type")
+    val memberType: MemberType = MemberType.NORMAL,
+
+    @Type(type = GenericEnumType.NAME)
+    @Column(name = "join_route")
+    val joinRoute: JoinRoute = JoinRoute.PC,
 
 ) {
 
     @Column(name = "join_ymdt")
     val joinDateTime: LocalDateTime = LocalDateTime.now()
 
+    @Column(name = "last_login_ymdt")
+    var lastLoginDateTime: LocalDateTime? = null
+        private set
+
     @Column(name = "update_ymdt")
     var updateDateTime: LocalDateTime? = null
+        private set
+
+    @Column(name = "login_count")
+    var loginCount: Int = 0
+        private set
 
     companion object {
         fun create(params: MemberRegisterModel) = Member(
             email = params.email,
             password = params.password,
-            nickname = params.nickname
+            nickname = params.nickname,
+            memberType = params.memberType,
+            joinRoute = params.joinRoute
         )
     }
 

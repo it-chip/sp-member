@@ -2,6 +2,8 @@ package com.sp.presentation.handler
 
 import com.sp.application.member.MemberCommandService
 import com.sp.domain.extensions.toJson
+import com.sp.enums.JoinRoute
+import com.sp.enums.MemberType
 import com.sp.presentation.request.MemberRegisterRequest
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -47,7 +49,9 @@ internal class MemberHandlerTest {
         val requestBody = MemberRegisterRequest(
             email = "dlwoen9@naver.com",
             password = "qwert12345",
-            nickname = "두두"
+            nickname = "두두",
+            memberType = MemberType.NORMAL,
+            joinRoute = JoinRoute.PC
         )
 
         val request =
