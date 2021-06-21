@@ -1,6 +1,6 @@
 package com.sp.application.member
 
-import com.sp.application.auth.AuthQueryService
+import com.sp.application.auth.MemberQueryService
 import com.sp.domain.member.DuplicatedEmailException
 import com.sp.domain.member.MemberDomainService
 import com.sp.domain.member.MemberRepository
@@ -31,7 +31,7 @@ internal class MemberCommandServiceTest {
     private lateinit var transactionTemplate: TransactionTemplate
 
     @MockK
-    private lateinit var authQueryService: AuthQueryService
+    private lateinit var memberQueryService: MemberQueryService
 
     @MockK
     private lateinit var memberRepository: MemberRepository
@@ -41,7 +41,7 @@ internal class MemberCommandServiceTest {
     @BeforeEach
     fun setUp() {
         memberCommandService =
-            MemberCommandService(memberDomainService, transactionTemplate, authQueryService, memberRepository)
+            MemberCommandService(memberDomainService, transactionTemplate, memberQueryService, memberRepository)
 
         every { transactionTemplate.execute(any<TransactionCallback<*>>()) } answers {
             (firstArg() as TransactionCallback<*>).doInTransaction(mockk())
