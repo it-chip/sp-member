@@ -58,7 +58,7 @@ internal class TokenRouterTest(private val context: ApplicationContext) {
         coEvery { tokenCommandService.createToken(any()) } returns token
 
         webTestClient.post()
-            .uri("/internal/auth/token")
+            .uri("/internal/members/token")
             .header("Version", "1.1")
             .accept(MediaType.APPLICATION_JSON)
             .bodyValue(request)

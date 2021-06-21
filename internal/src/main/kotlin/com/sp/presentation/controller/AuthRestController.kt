@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
  * @author Jaedoo Lee
  */
 @RestController
-@RequestMapping(path = ["/internal/auth"])
+@RequestMapping(path = ["/internal/members"])
 class AuthRestController(
     private val authHandler: AuthHandler
 ) {

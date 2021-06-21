@@ -18,7 +18,7 @@ class TokenRouter(
     @Bean
     fun routeToken(): RouterFunction<ServerResponse> {
         return coRouter {
-            ("/internal/auth" and headers { "1.1" in it.header("Version") }).nest {
+            ("/internal/members" and headers { "1.1" in it.header("Version") }).nest {
                 accept(MediaType.APPLICATION_JSON).nest {
                     POST("token", authHandler::createToken)
                 }
