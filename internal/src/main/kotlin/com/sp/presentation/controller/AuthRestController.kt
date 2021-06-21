@@ -19,7 +19,7 @@ class AuthRestController(
 ) {
     @GetMapping(
         path = ["token/check"],
-        headers = ["Version=1.1"],
+        headers = ["Version=1.0"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )

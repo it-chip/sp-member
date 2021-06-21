@@ -59,7 +59,7 @@ internal class TokenRouterTest(private val context: ApplicationContext) {
 
         webTestClient.post()
             .uri("/internal/members/token")
-            .header("Version", "1.1")
+            .header("Version", "1.0")
             .accept(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()

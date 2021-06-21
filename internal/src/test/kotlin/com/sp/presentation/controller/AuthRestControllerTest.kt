@@ -51,7 +51,7 @@ internal class AuthRestControllerTest(private val context: ApplicationContext) {
 
         webTestClient.get()
             .uri("/internal/members/token/check")
-            .header("Version", "1.1")
+            .header("Version", "1.0")
             .header("accessToken", token)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .accept(MediaType.APPLICATION_JSON)
