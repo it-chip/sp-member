@@ -1,12 +1,14 @@
 package com.sp.application.member
 
-import com.sp.application.auth.*
-import com.sp.domain.*
-import com.sp.domain.member.*
-import com.sp.infrastructure.model.*
-import com.sp.presentation.request.*
-import org.springframework.stereotype.*
-import org.springframework.transaction.support.*
+import com.sp.application.auth.MemberQueryService
+import com.sp.domain.member.DuplicatedEmailException
+import com.sp.domain.member.MemberDomainService
+import com.sp.domain.member.MemberRepository
+import com.sp.domain.member.RequestException
+import com.sp.infrastructure.model.LoginInfoRequest
+import com.sp.presentation.request.LoginRequest
+import org.springframework.stereotype.Service
+import org.springframework.transaction.support.TransactionTemplate
 
 /**
  * @author Jaedoo Lee
@@ -16,7 +18,7 @@ import org.springframework.transaction.support.*
 class MemberCommandService(
     private val memberDomainService: MemberDomainService,
     private val transactionTemplate: TransactionTemplate,
-    private val authQueryService: AuthQueryService,
+    private val memberQueryService: MemberQueryService,
     private val memberRepository: MemberRepository
 ) {
 
@@ -34,7 +36,7 @@ class MemberCommandService(
 
         return member
             .also { it.matchesPassword(params.password) }
-            .let { authQueryService.createToken(LoginInfoRequest(member)) }
+            .let { memberQueryService.createToken(LoginInfoRequest(member)) }
     }
 
     private fun validateDuplicatedEmail(email: String) {
