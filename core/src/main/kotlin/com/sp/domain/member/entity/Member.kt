@@ -2,6 +2,7 @@ package com.sp.domain.member.entity
 
 import com.sp.domain.GenericEnumType
 import com.sp.domain.member.model.MemberRegisterModel
+import com.sp.domain.member.model.MemberUpdateModel
 import com.sp.domain.member.util.MemberPasswordEncryptor
 import com.sp.enums.JoinRoute
 import com.sp.enums.MemberType
@@ -24,10 +25,10 @@ data class Member(
     val no: Long = 0,
 
     @Column(name = "email")
-    val email: String,
+    var email: String,
 
     @Column(name = "password")
-    val password: String,
+    var password: String,
 
     @Column(name = "nickname")
     var nickname: String = "",
@@ -75,8 +76,10 @@ data class Member(
         }
     }
 
-    fun modify(nickname: String) {
-        this.nickname = nickname
+    fun modifyProfile(params: MemberUpdateModel) {
+        if (!params.email.isNullOrBlank()) this.email = params.email
+        if (!params.newPassword.isNullOrBlank()) this.password = params.newPassword
+        if (!params.nickname.isNullOrBlank()) this.nickname = params.nickname
         this.updateDateTime = LocalDateTime.now()
     }
 }

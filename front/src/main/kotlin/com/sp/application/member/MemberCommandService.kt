@@ -1,12 +1,14 @@
 package com.sp.application.member
 
-import com.sp.application.auth.*
-import com.sp.domain.*
-import com.sp.domain.member.*
-import com.sp.infrastructure.model.*
-import com.sp.presentation.request.*
-import org.springframework.stereotype.*
-import org.springframework.transaction.support.*
+import com.sp.application.auth.AuthQueryService
+import com.sp.domain.member.DuplicatedEmailException
+import com.sp.domain.member.MemberDomainService
+import com.sp.domain.member.MemberRepository
+import com.sp.domain.member.RequestException
+import com.sp.infrastructure.model.LoginInfoRequest
+import com.sp.presentation.request.LoginRequest
+import org.springframework.stereotype.Service
+import org.springframework.transaction.support.TransactionTemplate
 
 /**
  * @author Jaedoo Lee
@@ -30,7 +32,7 @@ class MemberCommandService(
     suspend fun createToken(params: LoginRequest): String {
         val member = transactionTemplate.execute {
             memberDomainService.checkMemberInfo(params.email)
-        }?: throw RequestException("email : ${params.email}")
+        } ?: throw RequestException("email : ${params.email}")
 
         return member
             .also { it.matchesPassword(params.password) }
@@ -43,7 +45,7 @@ class MemberCommandService(
 
     suspend fun update(params: MemberProfileParams) {
         transactionTemplate.execute {
-            memberDomainService.update(params)
+            memberDomainService.update(params.toModel(), params.oldPassword)
         }
     }
 

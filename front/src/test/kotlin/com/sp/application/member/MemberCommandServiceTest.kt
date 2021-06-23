@@ -106,18 +106,21 @@ internal class MemberCommandServiceTest {
         // given
         val params = MemberProfileParams(
             no = 1L,
-            nickname = "두두"
+            email = "dlwoen9@naver.com",
+            nickname = "두두",
+            oldPassword = "old",
+            newPassword = "new"
         )
 
         // when
-        coEvery { memberDomainService.update(any()) } just runs
+        coEvery { memberDomainService.update(any(), any()) } just runs
         runBlocking {
             memberCommandService.update(params)
         }
 
         // then
         coVerify {
-            memberDomainService.update(any())
+            memberDomainService.update(any(), any())
         }
 
     }

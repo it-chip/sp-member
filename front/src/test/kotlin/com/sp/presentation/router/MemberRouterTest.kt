@@ -178,7 +178,10 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
     @Test
     fun `회원 정보 수정`() {
         val request = MemberProfileRequest(
-            nickname = "두두루두두"
+            email = null,
+            nickname = "두두루두두",
+            oldPassword = null,
+            newPassword = null
         )
 
         coEvery { memberCommandService.update(any()) } just runs
@@ -199,7 +202,12 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                         ResourceSnippetParameters.builder()
                             .tag(TAG)
                             .summary("회원 정보 수정")
-                            .description("회원 정보(닉네임) 수정")
+                            .description(
+                                """
+                                |## 회원 정보 수정
+                                |변경할 값만 request로 전송(""은 400 응답)
+                                |""".trimMargin()
+                            )
                             .requestHeaders(
                                 ResourceDocumentation.headerWithName("Version")
                                     .description("버전"),
@@ -207,9 +215,22 @@ internal class MemberRouterTest(private val context: ApplicationContext) {
                                     .description("AccessToken")
                             )
                             .requestFields(
+                                fieldWithPath("email")
+                                    .description("회원 이메일(아이디)")
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
                                 fieldWithPath("nickname")
                                     .description("회원 닉네임")
-                                    .type(JsonFieldType.STRING),
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
+                                fieldWithPath("oldPassword")
+                                    .description("기존 비밀번호")
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
+                                fieldWithPath("newPassword")
+                                    .description("변경할 비밀번호")
+                                    .type(JsonFieldType.STRING)
+                                    .optional(),
                             ).build()
                     )
                 )
